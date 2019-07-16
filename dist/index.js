@@ -441,9 +441,12 @@ if (typeof define === "function" && define.amd) {
         (global = global || self, global.heic2any = factory())
     }
 }(this, function () { 'use strict';
-
-const supportedMIMETypes = ["image/png", "image/jpeg", "image/gif"];
-function heic2any({ blob, toType, quality }) {
+"use strict";
+exports.__esModule = true;
+require("./libheif");
+var supportedMIMETypes = ["image/png", "image/jpeg", "image/gif"];
+function heic2any(_a) {
+    var blob = _a.blob, toType = _a.toType, quality = _a.quality;
     // normalize quality
     if (quality !== undefined) {
         if (quality > 1 || quality < 0) {
@@ -456,32 +459,32 @@ function heic2any({ blob, toType, quality }) {
             toType = undefined;
         }
     }
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const buffer = e.target.result;
-            const decoder = new libheif.HeifDecoder();
-            const imagesArr = decoder.decode(buffer);
+    return new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var buffer = e.target.result;
+            var decoder = new libheif.HeifDecoder();
+            var imagesArr = decoder.decode(buffer);
             if (!imagesArr || !imagesArr.length) {
                 return reject("format not supported");
             }
-            const primaryImage = imagesArr.find(x => x.is_primary()) || imagesArr[0];
-            const w = primaryImage.get_width();
-            const h = primaryImage.get_height();
-            const canvas = document.createElement("canvas");
+            var primaryImage = imagesArr.find(function (x) { return x.is_primary(); }) || imagesArr[0];
+            var w = primaryImage.get_width();
+            var h = primaryImage.get_height();
+            var canvas = document.createElement("canvas");
             canvas.width = w;
             canvas.height = h;
-            const ctx = canvas.getContext("2d");
+            var ctx = canvas.getContext("2d");
             if (!ctx) {
                 return reject("Error in canvas context");
             }
-            const whiteImage = ctx.createImageData(w, h);
-            for (let i = 0; i < w * h; i++) {
+            var whiteImage = ctx.createImageData(w, h);
+            for (var i = 0; i < w * h; i++) {
                 whiteImage.data[i * 4 + 3] = 255;
             }
-            primaryImage.display(whiteImage, display_image_data => {
+            primaryImage.display(whiteImage, function (display_image_data) {
                 ctx.putImageData(display_image_data, 0, 0);
-                canvas.toBlob(resultingBlob => {
+                canvas.toBlob(function (resultingBlob) {
                     if (resultingBlob) {
                         resolve(resultingBlob);
                     }
@@ -491,7 +494,7 @@ function heic2any({ blob, toType, quality }) {
         reader.readAsArrayBuffer(blob);
     });
 }
-
+exports["default"] = heic2any;
 
 return heic2any;
 }));
