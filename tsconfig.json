@@ -3,6 +3,7 @@
 		"declaration": true,
 		"declarationDir": "./dist",
 		"lib": ["dom", "es2015"],
+		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"strict": true,
 		"outDir": "./dist"
