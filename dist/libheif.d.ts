@@ -1,0 +1,1 @@
+../src/libheif.d.ts
